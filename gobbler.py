@@ -67,6 +67,12 @@ def main():
         ## Update derived quantities
         source = (win_x - source[0] , win_y - source[1])
 
+        if debug > 0:
+                print("source:", source)
+
+        ## Initialize random number generator
+        rng = np.random.default_rng()
+
         ## Initialize display (game) engine
         pygame.init()
         pygame.font.init()
@@ -107,12 +113,14 @@ def main():
                         ## Draw the odor source
                         pygame.draw.circle(screen, blue, intPair(source), 5)
 
-                ## Maybe a new particle is born:
-                if np.random.random() <= releaseRate * dt:
-                        particles.append(source)
+                ## Maybe particles are born:
+                particles += [source]*rng.poisson(releaseRate*dt)
+
+                if debug > 1:
+                        print("particles =", particles)
 
                 if debug > 0:
-                        print("particles:", len(particles))
+                        print("#particles:", len(particles))
 
                 ## Initialize particle loop variables
                 quads = [0,0,0,0]
@@ -121,7 +129,7 @@ def main():
                 for p in particles:
 
                         # Update particle position
-                        (p_x,p_y) = p = updatePosition(p, wind(p, t), diffusionVariance, dt)
+                        (p_x,p_y) = p = updatePosition(p, wind(p, t), diffusionVariance, dt, rng)
 
                         if framei == 0:
                                 pygame.draw.circle(screen, red, intPair(p), 2)
@@ -135,7 +143,7 @@ def main():
                         if p_y < 0 or p_y > win_y or p_x < 0 or p_x > win_x:
                                 if debug > 2:
                                         print("Not adding: particle at", p, "off screen")
-                        elif i >= 0 and np.random.random() < eatRate * dt: # eaten?
+                        elif i >= 0 and rng.random() < eatRate * dt: # eaten? XXX use exponential dist here
                                 if debug > 2:
                                         print("yum yum!")
                         else:
@@ -147,7 +155,7 @@ def main():
                         print("quads:", quads)
 
                 # Calculate the new coordinates of the agent
-                (u_x,u_y) = updatePosition(u,calcv(quads, vr),0.0,dt)
+                (u_x,u_y) = updatePosition(u,calcv(quads, vr),0.0,dt,rng)
 
                 if debug > 0:
                         if u_x < 0 or u_y < 0 or u_x + agent_x > win_x or u_y + agent_y > win_y:
@@ -176,9 +184,9 @@ def calcv(quads, vr):
         ydir = np.sign(- quads[0] - quads[1] + quads[2] + quads[3])
         return scaleVect(vr/np.sqrt(2), (xdir, ydir))
 
-def updatePosition(u,v,var,dt):
+def updatePosition(u,v,var,dt,rng):
         # integration position based on velocity, using a single Euler step of: d/dt position = velocity + noise
-        return sumVect(u, sumVect(scaleVect(dt, v), scaleVect(np.sqrt(dt), (np.random.normal(0.0,var), np.random.normal(0.0,var)))))
+        return sumVect(u, sumVect(scaleVect(dt, v), scaleVect(np.sqrt(dt*var), (rng.standard_normal(), rng.standard_normal()))))
 
 def whatQuad(x,y,maxx,maxy):
         if abs(x) > maxx or abs(y) > maxy or x == 0 or y == 0:
