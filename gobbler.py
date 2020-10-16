@@ -143,7 +143,7 @@ def main():
                         if p_y < 0 or p_y > win_y or p_x < 0 or p_x > win_x:
                                 if debug > 2:
                                         print("Not adding: particle at", p, "off screen")
-                        elif i >= 0 and rng.random() < eatRate * dt: # eaten? XXX use exponential dist here
+                        elif eatRate>0 and i >= 0 and rng.exponential(1/eatRate) < dt: # eaten?
                                 if debug > 2:
                                         print("yum yum!")
                         else:
