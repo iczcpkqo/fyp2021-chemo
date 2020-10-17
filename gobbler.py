@@ -143,11 +143,11 @@ def main():
                         if p_y < 0 or p_y > win_y or p_x < 0 or p_x > win_x:
                                 if debug > 2:
                                         print("Not adding: particle at", p, "off screen")
-                        elif eatRate>0 and i >= 0 and rng.exponential(1/eatRate) < dt: # eaten?
-                                if debug > 2:
-                                        print("yum yum!")
-                        else:
+                        elif eatRate == 0 or i < 0 or rng.exponential(1/eatRate) >= dt:
                                 newParticles.append(p)
+                        else:
+                                if debug > 2:
+                                        print("Not adding: particle at", p, "quad", i, "eaten")
 
                 particles = newParticles
 
