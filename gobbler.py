@@ -162,10 +162,8 @@ def main():
                                 print("Agent out of bounds")
 
                 # Keep agent in bounds
-                u_x = max(0.0, u_x)
-                u_x = min(u_x, win_x - agent_x)
-                u_y = max(0.0, u_y)
-                u_y = min(u_y, win_y - agent_y)
+                u_x = np.clip(0.0, u_x, win_x - agent_x)
+                u_y = np.clip(0.0, u_y, win_y - agent_y)
 
                 u = (u_x, u_y)
 
