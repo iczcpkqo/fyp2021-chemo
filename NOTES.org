@@ -56,3 +56,72 @@
 - S. P. Strong, B. Freedman, William Bialek, and R. Koberle
 - Phys. Rev. E 57, 4604 – Published 1 April 1998
 - URL https://www.princeton.edu/~wbialek/our_papers/strong+al_98b.pdf
+** Random Discussion
+XIANG MAO:
+
+This week I looked at the source code and some related materials, and plan to start next week to make my ideas into a simple model based on the existing code, and try to make the interface look better.
+
+And I just have few questions, as follows:
+
+1. One of the conditions for the smooth operation of this system is that these tiny particles need constant motion, right?
+
+a. If the entire area is full of particles, and all particles are in a static state, even if the area closer to the source is higher, the system will not work properly, right?
+
+2. Could I add multiple sources of released particles?
+
+a. If the receiving device is at the same distance to the two sources, does it mean that it is random in which direction it goes?
+
+b. If I set different weights for particles from different sources, when the weighted path value of the receiver to different sources is also the same, does it mean that it will still choose a path randomly?
+
+c. Is it true that when the receiver encounters multiple identical choices, it must randomly choose one?
+
+3. I originally had an idea to set up a maze. There is a source of particles released in the maze. The particles decrease in density as the distance increases, moving from high-density areas to low-density areas. Can Little Cube find the source?
+
+a. If there are two roads on the left and right in the maze, but the two roads in different directions have the same distance to the source, is it possible for the small square to walk a random path at this time?
+
+b. In this maze system, if there is only one source, will the receiver repeatedly circle around a certain area in the maze?
+
+c. If there are multiple sources in this maze, will the receiver repeatedly circle in a certain area?
+
+4. Can I finally make this particle system like a simulation scene? For example, N fire extinguishing robots choose which fire point to extinguish according to the smoke and dust indoors. Similar to this picture I drew. (I expected the final effect to be better. Here I only added a source, modified the wind direction, and the others are all painted.)
+
+a. Is this particle model suitable for this scene?(Fire rescue.)
+￼
+BARAK:
+
+Okay, I can tell you my vision. But since you're doing the work, you can change it etc.
+￼
+I was thinking of looking at different strategies for following as scent. So the current simulation has an organism at a pretty small scale, using a pretty bad strategy. But it does have a particle simulation (where the particles come from a source, and have drift like from steady wind and also random diffusion) and a simulated organism.
+
+What I'd *really* like to see is the agent learning a strategy, using reinforcement learning.
+￼
+Re 1a, that is true: if there is a constant density of odor, you can't figure out where it's coming from.
+
+Re 2, that's an interesting problem, which organisms do face. A male moth trying to find a female moth by scent (as they do) might have alternatives, and need to decide. Similarly with food. It's an ancient philosophical problem to choose between two identically good alternatives without getting paralyzed: https://en.wikipedia.org/wiki/Buridan%27s_ass
+￼
+Of course, in practice noise or random fluctuations, either intrinsic to the problem or introduced deliberately, allow a choice to be made.
+￼
+But doing this well might require a more sophisticated strategy, where the agent actually distinguishes part of the signal as coming from a "distractor" source it's decided to ignore, in order to follow the chosen source correctly.
+￼
+Not an issue I'd considered, although I have done a bunch of work on separating distinct audio sources, which is a structurally similar problem.
+￼
+Re 3, that sounds reasonable, you could make a complicated environment by adding barriers. You could also do without barriers, but make the wind more complicated so the odor plume becomes interesting.
+￼
+Re 4, having this be a robot trying to put out a fire is a cool idea.
+￼
+You could quote from the classic Ray Bradbury short story "There Will Come Soft Rains", with the smart house and its army of robots pressed into fighting a fire. https://www.btboces.org/Downloads/7_There%20Will%20Come%20Soft%20Rains%20by%20Ray%20Bradbury.pdf
+￼
+Anyway. For me, the interesting aspect is learning a chemotactic strategy. But that's me, and I'm totally okay with other people (like you) having other thoughts about what's most interesting and pushing those to the front.
+￼
+XIANG MAO
+￼
+Yes, Thank you very very much, Professor Pearlmutter. This is a sunny Morning! :)
+I will think about these issues again next week, and try to test my ideas in the simulator experiment.
+
+BARAK
+￼
+Okay. Getting learning working would certainly require some thought, at least if you want to track things through the simulation itself. Some sort of gradient-free learning as an outer loop that just looks at the result (genetic algorithm or something like that) would be possible, but I think very slow.
+￼
+XIANG MAO
+￼
+Yes , I will try it. (I know it may not be the best way, sometimes I am just curious about the effect)
