@@ -13,7 +13,6 @@
 - odor particles are removed if they hit the edge of the arena
 - odor particles are stochastically absorbed (removed) when on the agent
 *** Things that really should be fixed or done
-- Emission should use true Poisson process, so >1 particle can be emitted in one time step
 - Option to terminate simulation when agent gets close to source, or after some timeout
 - Make plots of distribution of time to get to source as function of various parameters
 ** References
