@@ -8,27 +8,31 @@ import pygame
 import numpy as np
 from pygame.locals import *
 import agent.simple_agent as sp_a
+import matplotlib.pyplot as plt
 import particle.simple_particle as sp_p
 import maze.office as mz_of
+import math
+
 
 def main():
     ## Process command-line arguments
     parser = argparse.ArgumentParser()
-    parser.add_argument("-debug", help="debug level (default: %(default)s)",                      type=int,   default=0)
-    parser.add_argument("-eat",   help="agent's particle absorption rate (default: %(default)s)", type=float, default=0.25)
-    parser.add_argument("-ax",    help="agent width (default: %(default)s)",                      type=float, default=100.0)
-    parser.add_argument("-ay",    help="agent height (default: %(default)s)",                     type=float, default=20.0)
-    parser.add_argument("-ax0",   help="agent initial position down (default: %(default)s)",      type=float, default=250.0)
-    parser.add_argument("-ay0",   help="agent initial position right (default: %(default)s)",     type=float, default=250.0)
-    parser.add_argument("-avel",  help="agent chase velocity (default: %(default)s)",             type=float, default=5.0)
-    parser.add_argument("-sx",    help="source offset left from LR (default: %(default)s)",       type=float, default=100.0)
-    parser.add_argument("-sy",    help="source offset up from LR (default: %(default)s)",         type=float, default=100.0)
-    parser.add_argument("-winx",  help="arena width (default: %(default)s)",                      type=int,   default=1000)
-    parser.add_argument("-winy",  help="arena height (default: %(default)s)",                     type=int,   default=600)
-    parser.add_argument("-emit",  help="particle emission rate (default: %(default)s)",           type=float, default=5.0)
-    parser.add_argument("-brown", help="particle diffusion variance (default: %(default)s)",      type=float, default=5.0)
-    parser.add_argument("-dt",    help="simulation timestep (default: %(default)s)",              type=float, default=0.3)
-    parser.add_argument("-frame", help="display every i-th frame (default: %(default)s)",         type=int,   default=1)
+    parser.add_argument("-debug", help="debug level (default: %(default)s)", type=int, default=0)
+    parser.add_argument("-eat", help="agent's particle absorption rate (default: %(default)s)", type=float,
+                        default=0.25)
+    parser.add_argument("-ax", help="agent width (default: %(default)s)", type=float, default=100.0)
+    parser.add_argument("-ay", help="agent height (default: %(default)s)", type=float, default=20.0)
+    parser.add_argument("-ax0", help="agent initial position down (default: %(default)s)", type=float, default=250.0)
+    parser.add_argument("-ay0", help="agent initial position right (default: %(default)s)", type=float, default=250.0)
+    parser.add_argument("-avel", help="agent chase velocity (default: %(default)s)", type=float, default=5.0)
+    parser.add_argument("-sx", help="source offset left from LR (default: %(default)s)", type=float, default=100.0)
+    parser.add_argument("-sy", help="source offset up from LR (default: %(default)s)", type=float, default=100.0)
+    parser.add_argument("-winx", help="arena width (default: %(default)s)", type=int, default=1000)
+    parser.add_argument("-winy", help="arena height (default: %(default)s)", type=int, default=600)
+    parser.add_argument("-emit", help="particle emission rate (default: %(default)s)", type=float, default=5.0)
+    parser.add_argument("-brown", help="particle diffusion variance (default: %(default)s)", type=float, default=5.0)
+    parser.add_argument("-dt", help="simulation timestep (default: %(default)s)", type=float, default=2.3)
+    parser.add_argument("-frame", help="display every i-th frame (default: %(default)s)", type=int, default=1)
     args = parser.parse_args()
 
     # debug level
@@ -69,7 +73,7 @@ def main():
     frame = args.frame
 
     ## Update derived quantities
-    source = (win_x - source[0] , win_y - source[1])
+    source = (win_x - source[0], win_y - source[1])
 
     if debug > 0:
         print("source:", source)
@@ -80,27 +84,28 @@ def main():
     ## Initialize display (game) engine
     pygame.init()
     pygame.font.init()
-    screen = pygame.display.set_mode((win_x,win_y))
+    screen = pygame.display.set_mode((win_x, win_y))
     pygame.display.set_caption("Smelly the Chemotactic Agent")
-    font = pygame.font.SysFont('Cambria',40)
+    font = pygame.font.SysFont('Cambria', 40)
 
-    white = (255,255,255)
-    red = (255,0,0)
-    green = (0,255,0)
-    blue = (0,0,255)
+    white = (255, 255, 255)
+    red = (255, 0, 0)
+    green = (0, 255, 0)
+    blue = (0, 0, 255)
 
     ## Initialize temportal loop variables
     particles = []
     t = 0.0
     framei = 0
 
-    a_agent = sp_a.SimpleAgent(screen, args)
-    agent_number = 4
+    a_agent = sp_a.SimpleAgent(screen, args, source)
+    agent_number = 0
     agent_box = []
     for i in range(0, agent_number):
-        agent_box.append(sp_a.SimpleAgent(screen, args))
+        agent_box.append(sp_a.SimpleAgent(screen, args, source))
 
     # ii = 0
+    time_box = [0]
 
     while True:
         if framei == 0:
@@ -131,7 +136,7 @@ def main():
             pygame.draw.circle(screen, blue, intPair(source), 5)
 
         ## Maybe particles are born: | 泊松分布，具体每一步的运算结果是什么？
-        particles += [source]*rng.poisson(releaseRate*dt)
+        particles += [source] * rng.poisson(releaseRate * dt)
 
         # if ii < 10:
         #     print(particles)
@@ -147,21 +152,23 @@ def main():
         for i_agent in agent_box:
             i_agent.quad = [0, 0, 0, 0]
 
-        quads = [0,0,0,0]
+        quads = [0, 0, 0, 0]
         newParticles = []
 
         for p in particles:
 
             # Update particle position
-            (p_x,p_y) = p = updatePosition(p, wind(p, t), diffusionVariance, dt, rng)
+            (p_x, p_y) = p = updatePosition(p, wind(p, t), diffusionVariance, dt, rng)
 
             if framei == 0:
                 pygame.draw.circle(screen, red, intPair(p), 2)
 
-            i = whatQuad(p_x - (a_agent.u_x + a_agent.agent_x/2), p_y - (a_agent.u_y + a_agent.agent_y/2), a_agent.agent_x/2, a_agent.agent_y/2)
+            i = whatQuad(p_x - (a_agent.u_x + a_agent.agent_x / 2), p_y - (a_agent.u_y + a_agent.agent_y / 2),
+                         a_agent.agent_x / 2, a_agent.agent_y / 2)
             p_survive = -1
             for i_agent in agent_box:
-                p_touch = whatQuad(p_x - (i_agent.u_x + i_agent.agent_x / 2), p_y - (i_agent.u_y + i_agent.agent_y / 2), i_agent.agent_x / 2, i_agent.agent_y / 2)
+                p_touch = whatQuad(p_x - (i_agent.u_x + i_agent.agent_x / 2), p_y - (i_agent.u_y + i_agent.agent_y / 2),
+                                   i_agent.agent_x / 2, i_agent.agent_y / 2)
                 if p_touch >= 0:
                     p_survive = 0
                     i_agent.quad[p_touch] += 1
@@ -174,7 +181,7 @@ def main():
             if p_y < 0 or p_y > win_y or p_x < 0 or p_x > win_x:
                 if debug > 2:
                     print("Not adding: particle at", p, "off screen")
-            elif a_agent.eatRate == 0 or (i < 0 and p_survive < 0) or rng.exponential(1/a_agent.eatRate) >= dt:
+            elif a_agent.eatRate == 0 or (i < 0 and p_survive < 0) or rng.exponential(1 / a_agent.eatRate) >= dt:
                 newParticles.append(p)
             else:
                 if debug > 2:
@@ -186,7 +193,10 @@ def main():
             print("quads:", quads)
 
         # Calculate the new coordinates of the agent
-        (a_agent.u_x, a_agent.u_y) = updatePosition(a_agent.u, calcv(quads, a_agent.vr),0.0,dt,rng)
+        # (a_agent.u_x, a_agent.u_y) = updatePosition(a_agent.u, calcv(quads, a_agent.vr), 0.0, dt, rng)
+        u_tmp = updatePosition(a_agent.u, calcv(quads, a_agent.vr), 0.0, dt, rng)
+        a_agent.set_position(u_tmp[0],u_tmp[1])
+
         for i_agent in agent_box:
             (i_agent.u_x, i_agent.u_y) = updatePosition(i_agent.u, calcv(i_agent.quad, i_agent.vr), 0.0, dt, rng)
 
@@ -200,40 +210,97 @@ def main():
 
         if framei == 0:
             # Update screen
-            screen.blit(font.render(' t = ' + str(round(t,3)), False, (0,0,0)), (0,0))
+            screen.blit(font.render(' t = ' + str(round(t, 3)), False, (0, 0, 0)), (0, 0))
             pygame.display.update()
 
         t += dt
-        framei = np.mod(framei+1, frame)
+        framei = np.mod(framei + 1, frame)
+
+        # if t > 10.0:
+        #     framei = 1
+
+        # draw some table
+        plt.ion()  # 开启interactive mode 成功的关键函数
+        plt.figure("some graph as you see")
+
+        # plt.clf() #清空画布上的所有内容
+        # t_now = i*0.1
+        # t.append(t_now)#模拟数据增量流入，保存历史数据
+        # m.append(sin(t_now))#模拟数据增量流入，保存历史数据
+        # n.append(cos(t_now))#模拟数据增量流入，保存历史数据
+        # plt.plot(t,m,'-r')
+        # lateral
+        plt.subplot(2,2,1)
+        plt.title("lateral offset from target")
+        plt.xlabel("time")
+        plt.ylabel("distance")
+        plt.grid(True)
+        plt.plot(a_agent.time_box, a_agent.bias_target,'-g', lw=1)
+
+        plt.subplot(2,2,2)
+        plt.title("lateral offset from last step")
+        plt.xlabel("time")
+        plt.ylabel("distance")
+        plt.grid(True)
+        plt.plot(a_agent.time_box, a_agent.bias_step,'-b', lw=1)
+
+        plt.subplot(2,2,3)
+        plt.title("The distance of each step from the source")
+        plt.xlabel("time")
+        plt.ylabel("distance")
+        plt.grid(True)
+        plt.plot(a_agent.time_box, a_agent.distance,'-r', lw=1)
+
+        plt.subplot(2,2,4)
+        plt.title("How far is each step forward")
+        plt.xlabel("time")
+        plt.ylabel("distance")
+        plt.grid(True)
+        plt.plot(a_agent.time_box, a_agent.forward_step,'--y', lw=1)
+
+        # print(len(a_agent.time_box))
+
+        plt.pause(0.01)
+        # if (i == 1999):
+        #     plt.pause(1)
+
     pygame.quit()
+
 
 # a velocity based on differential odors (highly viscous medium)
 def calcv(quads, vr):
     xdir = np.sign(- quads[0] + quads[1] - quads[2] + quads[3])
     ydir = np.sign(- quads[0] - quads[1] + quads[2] + quads[3])
-    return scaleVect(vr/np.sqrt(2), (xdir, ydir))
+    return scaleVect(vr / np.sqrt(2), (xdir, ydir))
 
-def updatePosition(u,v,var,dt,rng):
+
+def updatePosition(u, v, var, dt, rng):
     # integration position based on velocity, using a single Euler step of: d/dt position = velocity + noise
-    return sumVect(u, sumVect(scaleVect(dt, v), scaleVect(np.sqrt(dt*var), (rng.standard_normal(), rng.standard_normal()))))
+    return sumVect(u, sumVect(scaleVect(dt, v),
+                              scaleVect(np.sqrt(dt * var), (rng.standard_normal(), rng.standard_normal()))))
 
-def whatQuad(x,y,maxx,maxy):
+
+def whatQuad(x, y, maxx, maxy):
     if abs(x) > maxx or abs(y) > maxy or x == 0 or y == 0:
         return -1
     else:
-        return int(x > 0) + 2*int(y > 0)
+        return int(x > 0) + 2 * int(y > 0)
 
-def wind(p,t):
+
+def wind(p, t):
     return (-1.2, -0.3)
 
+
 def scaleVect(s, v):
-    return (s*v[0], s*v[1])
+    return (s * v[0], s * v[1])
+
 
 def sumVect(u, v):
-    return (u[0]+v[0], u[1]+v[1])
+    return (u[0] + v[0], u[1] + v[1])
+
 
 def intPair(p):
-    return (int(p[0]),int(p[1]))
+    return (int(p[0]), int(p[1]))
 
 if __name__ == "__main__":
     main()
