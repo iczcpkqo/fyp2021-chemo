@@ -95,13 +95,13 @@ def main():
 
     db_box = cal_db.DataBox()
     ## 递增吸收率 变化范围 - x
-    for i_eat in np.arange(0, 1, 0.02):
+    for i_eat in np.arange(0, 1, 0.5):
         db_box.add_eat(i_eat)
         ## 循环运行代理次数
-        for run_times in range(1000):
+        for run_times in range(8):
             ## 吸收率步增
             args.eat = i_eat
-            args.eat = 0.25
+            # args.eat = 0.25
 
             ## 代理回到起始位置
             args.ax0 = 250.0
@@ -284,42 +284,57 @@ def main():
                 # #     plt.pause(1)
 
                 if a_agent.is_arrive() == True:
+                    a_agent.set_runtime(t)
                     db_box.arrive(a_agent, True)
                     ## 回收内存
                     del a_agent
                     # plt.clf()  # 清空画布上的所有内容
                     break
-                if a_agent.get_times() == 10000:
+                if t > 1000:
+                    a_agent.set_runtime(t)
                     db_box.arrive(a_agent, False)
                     ## 回收内存
                     del a_agent
                     break
-                if not (a_agent.get_times() % 100):
-                    print(a_agent.get_times())
+                # if not (a_agent.get_times() % 100):
+                #     print(a_agent.get_times())
 
-            db_box.print_databox()
-            # # draw some table
-            # plt.ion()  # 开启interactive mode 成功的关键函数
-            # plt.figure("some graph as you see")
-            #
-            # # t_now = i*0.1
-            # # t.append(t_now)#模拟数据增量流入，保存历史数据
-            # # m.append(sin(t_now))#模拟数据增量流入，保存历史数据
-            # # n.append(cos(t_now))#模拟数据增量流入，保存历史数据
-            # # plt.plot(t,m,'-r')
-            # # lateral
-            # plt.subplot(2, 2, 1)
-            # plt.title("lateral offset from target")
-            # plt.xlabel("time")
-            # plt.ylabel("distance")
-            # plt.grid(True)
-            # plt.plot(a_agent.time_box, a_agent.bias_target, '-g', lw=1)
-            #
-            # plt.pause(0.001)
-            # # if (i == 1999):
-            # #     plt.pause(1)
-            # # 回收内存
-            # plt.clf()  # 清空画布上的所有内容
+            # db_box.print_databox()
+
+            # draw some table
+            db_box.cal_all()
+            # db_box.save_as_txt()
+            db_box.savenew_as_txt()
+            plt.ion()  # 开启interactive mode 成功的关键函数
+            plt.figure("some graph as you see")
+
+            # average time of each eat
+            plt.subplot(2, 2, 1)
+            plt.title("avg arrive time")
+            plt.xlabel("eat rate")
+            plt.ylabel("avg time")
+            plt.grid(True)
+            plt.plot(db_box.eats, db_box.avg_steps, '-g', lw=1)
+
+            # probability of arrive no more than 1000time-step of each eat
+            plt.subplot(2, 2, 2)
+            plt.title("probability of arrive in 1000")
+            plt.xlabel("eat rate")
+            plt.ylabel("probability")
+            plt.grid(True)
+            plt.plot(db_box.eats, db_box.success_rate, '-g', lw=1)
+
+            # variance of time of each eat
+            plt.subplot(2, 2, 3)
+            plt.title("arrive time variance")
+            plt.xlabel("eat rate")
+            plt.ylabel("variance")
+            plt.grid(True)
+            plt.plot(db_box.eats, db_box.variance_steps, '-g', lw=1)
+
+            plt.pause(0.001)
+            # 回收内存
+            plt.clf()  # 清空画布上的所有内容
 
     pygame.quit()
 

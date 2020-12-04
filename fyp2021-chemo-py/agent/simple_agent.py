@@ -38,6 +38,9 @@ class SimpleAgent:
         self.sch = True
         self.is_touch_me = False
 
+        # How much time pass
+        self.runtime = 0
+
         # lateral offset from target
         self.bias_target = [0]
 
@@ -117,7 +120,12 @@ class SimpleAgent:
     def get_times(self):
         return len(self.time_box)
 
+    def set_runtime(self, runtime):
+        self.runtime = runtime
+        return self.runtime
 
+    def get_runtime(self):
+        return self.runtime
 
 
 # # lateral offset from target
