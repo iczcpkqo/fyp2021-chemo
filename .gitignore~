@@ -1,0 +1,6 @@
+*.exe
+__pycache__/
+.idea/
+.gitignore
+build/
+dist/
