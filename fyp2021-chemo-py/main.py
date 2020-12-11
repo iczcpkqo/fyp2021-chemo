@@ -120,26 +120,13 @@ def main():
 
     ## Initialize a DataBox
     db_box = cal_db.DataBox()
-    ## 递增吸收率 变化范围 - x
+    ## range of eat - x
     for i_eat in np.arange(i_eat_start, i_eat_end, i_eat_step):
         number_eats += 1
         # db_box.add_eat(i_eat)
-        ## 循环运行代理次数
+        ## run times of the agent
         for run_times in range(i_run_times):
             number_single_data += 1
-            ## 吸收率步增
-            # args.eat = i_eat
-            # args.eat = 0.25
-
-            ## 代理回到起始位置
-            # args.ax0 = 250.0
-            # args.ay0 = 250.0
-            ## 拿出来得args参数
-            # eatRate = args.eat
-            # u = [args.ax0, args.ay0]
-            # 准备画图 draw some table
-            # plt.ion()  # 开启interactive mode 成功的关键函数
-            # plt.figure("some graph as you see")
 
             # Initialize temportal loop variables
             particles = []
@@ -294,7 +281,7 @@ def main():
 
                 steps += 1
                 if steps % 100 == 0:
-                    print(steps)
+                    print("i_eat: "+str(i_eat)+" | run_times: "+str(run_times)+" | steps: " + str(steps))
 
             print("eats: " + str(number_eats) + ", single data: " + str(number_single_data))
             # db_box.add_data(each_data)
@@ -334,8 +321,8 @@ def main():
                 plt.plot(db_box.eats, db_box.variance_steps, '-g', lw=1)
 
                 plt.pause(0.001)
-                # 回收内存
-                plt.clf()  # 清空画布上的所有内容
+                # clear memory
+                plt.clf()  # clear
 
     if switch_cartoon is True:
         pygame.quit()

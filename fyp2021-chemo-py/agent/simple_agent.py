@@ -157,10 +157,10 @@ class SimpleAgent:
 
     ## Update position
     def set_position(self, u_x, u_y):
-        # 每一次位置变更时触发
+        # Trigger every time the position changes
         if self.u_x != u_x or self.u_y != u_y:
             self.is_touch_me = True
-        # 在第一次触发后，每一帧都触发
+        # After the first trigger, every frame is triggered
         if self.is_touch_me:
             self.u_recoder.append((u_y, u_y))
             self.u_x = u_x
