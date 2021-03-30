@@ -6,9 +6,9 @@ import time
 
 # =========== [ Parameter Menu ] ========== #
 i_eat_start = 0.14  # The minimum value of eat at the beginning of the program
-i_eat_end = 1.00  # The maximum value of eat at the end of the program
+i_eat_end = 0.17  # The maximum value of eat at the end of the program
 i_eat_step = 0.01  # eat is the value that is incremented at the end of each fixed-eat cycle
-i_run_times = 10  # Number of cycles per fixed eat
+i_run_times = 1  # Number of cycles per fixed eat
 
 if __name__ == "__main__":
 

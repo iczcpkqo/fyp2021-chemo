@@ -679,9 +679,9 @@ def main():
     pattern_name = 'decay'
     # =========== [ Parameter Menu ] ========== #
     i_eat_start = 0.14   # first eat of loop     #
-    i_eat_end   = 1.00   # last eat of loop      #
+    i_eat_end   = 0.16   # last eat of loop      #
     i_eat_step  = 0.01  # increase of each time #
-    i_run_times = 10   # run times of each eat #
+    i_run_times = 1   # run times of each eat #
     # ===== [ Archimedean Spire Menu ] ======== #
     ## Is chose Archimedean Spire or not
     switch_arch_spire = False
