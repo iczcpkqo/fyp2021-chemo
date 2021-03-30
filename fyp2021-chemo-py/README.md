@@ -24,80 +24,86 @@
 
 ### Important Installation
 
+> ==**If the installation does not work due to missing packages, please try the `Basic Installation` below to install more packages**==
+
 | No. | Name             | Version | Installation via pip                 |
 | --- | ---------------- | ------- | ------------------------------------ |
 | 1   | stable_baselines | 2.10.1  | pip install stable_baselines==2.10.1 |
 | 1   | tensorflow       | 1.14.0  | pip install tensorflow==1.14.0       |
 
 ### Basic Installation
+
+> ==**If the installation does not work due to missing packages, please try the `FULL Installation` below to install more packages**==
+
 | No. | Name                    | Version | Installation via pip |
 | --- | ----------------------- | ------- | -------------------- |
-| 1   | argparse                | -       |                      |
-| 2   | datetime                | -       |                      |
-| 3   | decimal                 | -       |                      |
-| 4   | gym                     | 0.18.0  |                      |
-| 5   | numpy                   | 1.19.3  |                      |
-| 6   | pygame                  | 1.9.6   |                      |
-| 7   | math                    | -       |                      |
-| 8   | matplotlib              | 3.3.3   |                      |
-| 9   | pandas                  | 1.1.5   |                      |
-| 10  | pprint                  | -       |                      |
-| 11  | stable_baselines        | 2.10.1  |                      |
-| 12  | tensorflow              | 1.14.0  |                      |
+| 1   | gym                     | 0.18.0  |                      |
+| 2   | numpy                   | 1.19.3  |                      |
+| 3   | pygame                  | 1.9.6   |                      |
+| 4   | matplotlib              | 3.3.3   |                      |
+| 5   | pandas                  | 1.1.5   |                      |
+| 6   | stable_baselines        | 2.10.1  |                      |
+| 7   | tensorflow              | 1.14.0  |                      |
+| 8   | argparse                | -       |                      |
+| 9   | datetime                | -       |                      |
+| 10  | decimal                 | -       |                      |
+| 11  | math                    | -       |                      |
+| 12  | pprint                  | -       |                      |
 | 13  | time                    | -       |                      |
 
-## FULL LIST
+## FULL Installation
 
-absl-py==0.12.0
-astor==0.8.1
-atari-py==0.2.6
-cached-property==1.5.2
-click==7.1.2
-cloudpickle==1.6.0
-Corpora==1.0
-cycler==0.10.0
-Cython==0.29.14
-future==0.18.2
-gast==0.4.0
-gensim==3.8.3
-google-pasta==0.2.0
-grpcio==1.36.1
-gym==0.18.0
-h5py==3.2.1
-importlib-metadata==3.9.1
-joblib==1.0.0
-Keras-Applications==1.0.8
-Keras-Preprocessing==1.1.2
-kiwisolver==1.3.1
-llvmlite==0.35.0
-Markdown==3.3.4
-matplotlib==3.3.3
-nltk==3.5
-numba==0.52.0
-numpy==1.19.3
-opencv-python==4.5.1.48
-pandas==1.1.5
-Pillow==7.2.0
-protobuf==3.15.6
-pygame==1.9.6
-pyglet==1.5.0
-pyparsing==2.4.7
-python-dateutil==2.8.1
-pytz==2020.4
-regex==2020.11.13
-scikit-learn==0.23.2
-scipy==1.5.4
-six==1.15.0
-smart-open==4.1.0
-stable-baselines==2.10.1
-tensorboard==1.14.0
-tensorflow==1.14.0
-tensorflow-estimator==1.14.0
-termcolor==1.1.0
-threadpoolctl==2.1.0
-tqdm==4.55.1
-typing-extensions==3.7.4.3
-Werkzeug==1.0.1
-wrapt==1.12.1
-zipp==3.4.1
-
+| No. | Name                    | Version    | Installation via pip |
+| --- | ----------------------- | ---------- | -------------------- |
+| 1   | absl-py                 | 0.12.0     |                      |
+| 2   | astor                   | 0.8.1      |                      |
+| 3   | atari-py                | 0.2.6      |                      |
+| 4   | cached-property         | 1.5.2      |                      |
+| 5   | click                   | 7.1.2      |                      |
+| 6   | cloudpickle             | 1.6.0      |                      |
+| 7   | Corpora                 | 1.0        |                      |
+| 8   | cycler                  | 0.10.0     |                      |
+| 9   | Cython                  | 0.29.14    |                      |
+| 10  | future                  | 0.18.2     |                      |
+| 11  | gast                    | 0.4.0      |                      |
+| 12  | gensim                  | 3.8.3      |                      |
+| 13  | google-pasta            | 0.2.0      |                      |
+| 14  | grpcio                  | 1.36.1     |                      |
+| 15  | gym                     | 0.18.0     |                      |
+| 16  | h5py                    | 3.2.1      |                      |
+| 17  | importlib-metadata      | 3.9.1      |                      |
+| 18  | joblib                  | 1.0.0      |                      |
+| 19  | Keras-Applications      | 1.0.8      |                      |
+| 20  | Keras-Preprocessing     | 1.1.2      |                      |
+| 21  | kiwisolver              | 1.3.1      |                      |
+| 22  | llvmlite                | 0.35.0     |                      |
+| 23  | Markdown                | 3.3.4      |                      |
+| 24  | matplotlib              | 3.3.3      |                      |
+| 25  | nltk                    | 3.5        |                      |
+| 26  | numba                   | 0.52.0     |                      |
+| 27  | numpy                   | 1.19.3     |                      |
+| 28  | opencv-python           | 4.5.1.48   |                      |
+| 29  | pandas                  | 1.1.5      |                      |
+| 30  | Pillow                  | 7.2.0      |                      |
+| 31  | protobuf                | 3.15.6     |                      |
+| 32  | pygame                  | 1.9.6      |                      |
+| 33  | pyglet                  | 1.5.0      |                      |
+| 34  | pyparsing               | 2.4.7      |                      |
+| 35  | python-dateutil         | 2.8.1      |                      |
+| 36  | pytz                    | 2020.4     |                      |
+| 37  | regex                   | 2020.11.13 |                      |
+| 38  | scikit-learn            | 0.23.2     |                      |
+| 39  | scipy                   | 1.5.4      |                      |
+| 40  | six                     | 1.15.0     |                      |
+| 41  | smart-open              | 4.1.0      |                      |
+| 42  | stable-baselines        | 2.10.1     |                      |
+| 43  | tensorboard             | 1.14.0     |                      |
+| 44  | tensorflow              | 1.14.0     |                      |
+| 45  | tensorflow-estimator    | 1.14.0     |                      |
+| 46  | termcolor               | 1.1.0      |                      |
+| 47  | threadpoolctl           | 2.1.0      |                      |
+| 48  | tqdm                    | 4.55.1     |                      |
+| 49  | typing-extensions       | 3.7.4.3    |                      |
+| 50  | Werkzeug                | 1.0.1      |                      |
+| 51  | wrapt                   | 1.12.1     |                      |
+| 52  | zipp                    | 3.4.1      |                      |
