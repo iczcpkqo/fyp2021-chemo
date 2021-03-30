@@ -19,8 +19,8 @@ parser.add_argument("-frame", help="display every i-th frame (default: %(default
 parser.add_argument("-pygame",help="use pygame or not", action="store_true")
 parser.add_argument("-pattern",help="pattern name",                                           type=str,  default='')
 parser.add_argument("-useRl", help="use RL or not", action="store_true")
-parser.add_argument("-timeStep", help="Max timeSteps in each episode",                        type=int,   default=3000)
-parser.add_argument("-test", help="测试时 source固定", action="store_true")
+parser.add_argument("-timeStep", help="Max timeSteps in each episode",                        type=int,   default=3333)
+parser.add_argument("-test", help="Source fixed during testing", action="store_true")
 
 args = parser.parse_known_args()[0]
 

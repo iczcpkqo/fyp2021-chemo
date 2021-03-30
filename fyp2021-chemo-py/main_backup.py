@@ -676,7 +676,7 @@ def main():
     switch_cartoon = True        # Draw cartoon #
     switch_graph   = False       # Draw graph   #
     ## The name of this pattern, which pattern will be execute #
-    pattern_name = 'decay'
+    pattern_name = 'spire'
     # =========== [ Parameter Menu ] ========== #
     i_eat_start = 0.14   # first eat of loop     #
     i_eat_end   = 0.16   # last eat of loop      #
