@@ -239,16 +239,16 @@ class Env(gym.Env):
                 pygame.quit()
 
         screen.fill(white)
-        screen.blit(background_img, (0, 0))
+        # screen.blit(background_img, (0, 0))
 
         ## Draw the agent
         u_x, u_y = self.u.tolist()
-        # pygame.draw.rect(screen, green, (int(u_x), int(u_y), int(self.agent_x), int(self.agent_y)))
-        agentShow(int(u_x), int(u_y))
+        pygame.draw.rect(screen, green, (int(u_x), int(u_y), int(self.agent_x), int(self.agent_y)))
+        # agentShow(int(u_x), int(u_y))
 
         # with blue racing stripes
-        # pygame.draw.rect(screen, blue, (int(u_x + self.agent_x / 2) - 1, int(u_y), 2, int(self.agent_y)))
-        # pygame.draw.rect(screen, blue, (int(u_x), int(u_y + self.agent_y / 2) - 1, int(self.agent_x), 2))
+        pygame.draw.rect(screen, blue, (int(u_x + self.agent_x / 2) - 1, int(u_y), 2, int(self.agent_y)))
+        pygame.draw.rect(screen, blue, (int(u_x), int(u_y + self.agent_y / 2) - 1, int(self.agent_x), 2))
 
         ## Draw the odor source
         pygame.draw.circle(screen, blue, self.intPair(self.source), 5)
