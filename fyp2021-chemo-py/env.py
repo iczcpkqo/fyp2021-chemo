@@ -32,10 +32,12 @@ gameDisplay = pygame.display.set_mode( (config.args.winx, config.args.winy) )
 # Load img for agent
 agent_img = pygame.image.load('agent.png')
 
+# Load Background img
+background_img = pygame.image.load('background.png')
+
 # Draw agent
 def agentShow(x, y):
     gameDisplay.blit(agent_img,(x,y))
-
 
 def updatePosition(u, v: np.ndarray, var, dt):
     # integration position based on velocity, using a single Euler step of: d/dt position = velocity + noise
@@ -237,6 +239,7 @@ class Env(gym.Env):
                 pygame.quit()
 
         screen.fill(white)
+        screen.blit(background_img, (0, 0))
 
         ## Draw the agent
         u_x, u_y = self.u.tolist()
