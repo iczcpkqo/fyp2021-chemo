@@ -103,6 +103,23 @@ def getSpirePoint(idx, per, emit, time, center, a, b):
         # alpha = math.atan(k)
         return (p_spire[0] + rng.poisson(r_1) - r_2, p_spire[1] + rng.poisson(r_1) - r_1)
 
+# def getSpirePoint_New(u, per, emit, center, b):
+#     u = [u[0] - center[0], u[1] - center[1]]
+#
+#     if u[1] == 0:
+#         u[1] = 1
+#
+#     theta = math.atan(u[0]/u[1])
+#     a = u[0]/math.cos(theta) - b*theta
+#     theta_next = theta + theta_per_time
+#
+#     # x_next = (a+b_arch_spire*theta_next)*math.cos(theta_next)
+#     # y_next = (a+b_arch_spire*theta_next)*math.sin(theta_next)
+#
+#     u_next = archimedeanSpire(center, a, b, theta_next)
+#     print(u_next,center)
+#     return u_next
+
 def archimedeanSpire(center, a, b, theta):
     # Constants
     p = center[0]
@@ -121,6 +138,7 @@ class Env(gym.Env):
     def __init__(self, args):
         super(Env, self).__init__()
 
+        self.partices = []
         self.useRl = args.useRl
         self.pattern = args.pattern
 
@@ -292,22 +310,32 @@ class Env(gym.Env):
         # 2, particle extinction determined by eatRate
 
         ## New ions are generated from the source
-        self.particles += [self.source] * self.rng.poisson(self.releaseRate * self.dt)
+        # self.particles += [self.source] * self.rng.poisson(self.releaseRate * self.dt)
+
+        self.partices.append(Particle(0, a_arch_spire, b_arch_spire, self.source))
         newParticles = []
 
         ## Initialize particle loop variables
         # old method of calculating the amount needed for an action: self.quads
         self.quads = [0, 0, 0, 0]
 
-        for idx, p in enumerate(self.particles):
+        for p in self.particles:
+            print(p)
             # Update particle position
             if self.pattern == 'spire':
-                p_x, p_y = p = np.array(
-                    getSpirePoint(idx, theta_per_time, self.releaseRate, self.t,
-                                  (self.source[0], self.source[1]), a_arch_spire, b_arch_spire)
+                # p_x, p_y = p = np.array(
+                #     getSpirePoint(idx, theta_per_time, self.releaseRate, self.t,
+                #                   (self.source[0], self.source[1]), a_arch_spire, b_arch_spire)
+                # )
+
+
+                p_x, p_y = np.array(
+                    p.nextPosistion(theta_per_time)
                 )
+                # p_x, p_y = p = np.array(getSpirePoint_New(p, theta_per_time, self.releaseRate, (self.source[0], self.source[1]), b_arch_spire))
             else:
-                p_x, p_y = p = updatePosition(p, self.wind, self.diffusionVariance, self.dt)
+                p_x, p_y = updatePosition(p.u, self.wind, self.diffusionVariance, self.dt)
+                p.setPosition((p_x, p_y))
 
             u_x, u_y = self.u
 
@@ -383,3 +411,32 @@ class Env(gym.Env):
     @classmethod
     def intPair(cls, p):
         return int(p[0]), int(p[1])
+
+class Particle(gym.Env):
+
+    def __init__(self, theta, a, b, center=(0,0)):
+        self.u = (center[0], center[1])
+        self.x = center[0]
+        self.y = center[1]
+        self.theta = theta
+        self.a = a
+        self.b = b
+        self.center = center
+
+    def nextPosition(self, per):
+        self.theta = self.theta + per
+        x = (self.a + self.b * self.theta) * math.cos(self.theta) + self.center[0]
+        y = (self.a + self.b * self.theta) * math.sin(self.theta) + self.center[1]
+
+        self.u = (x, y)
+        self.x = x
+        self.y = y
+
+        return self.u
+
+    def setPosition(self, u):
+        self.u = u
+        self.x = u[0]
+        self.y = u[1]
+
+        return u
