@@ -1,6 +1,7 @@
 import gym
 import numpy as np
 import pygame
+import config
 from pygame.locals import *
 
 import math
@@ -25,7 +26,17 @@ b_arch_spire = 5
 
 rng_maker = np.random.default_rng()
 
-# 之后的几个全局函数是 原先 main.py 里面的工具函数.
+# Set pygame
+gameDisplay = pygame.display.set_mode( (config.args.winx, config.args.winy) )
+
+# Load img for agent
+agent_img = pygame.image.load('agent.png')
+
+# Draw agent
+def agentShow(x, y):
+    gameDisplay.blit(agent_img,(x,y))
+
+
 def updatePosition(u, v: np.ndarray, var, dt):
     # integration position based on velocity, using a single Euler step of: d/dt position = velocity + noise
 
@@ -229,11 +240,12 @@ class Env(gym.Env):
 
         ## Draw the agent
         u_x, u_y = self.u.tolist()
-        pygame.draw.rect(screen, green, (int(u_x), int(u_y), int(self.agent_x), int(self.agent_y)))
+        # pygame.draw.rect(screen, green, (int(u_x), int(u_y), int(self.agent_x), int(self.agent_y)))
+        agentShow(int(u_x), int(u_y))
 
         # with blue racing stripes
-        pygame.draw.rect(screen, blue, (int(u_x + self.agent_x / 2) - 1, int(u_y), 2, int(self.agent_y)))
-        pygame.draw.rect(screen, blue, (int(u_x), int(u_y + self.agent_y / 2) - 1, int(self.agent_x), 2))
+        # pygame.draw.rect(screen, blue, (int(u_x + self.agent_x / 2) - 1, int(u_y), 2, int(self.agent_y)))
+        # pygame.draw.rect(screen, blue, (int(u_x), int(u_y + self.agent_y / 2) - 1, int(self.agent_x), 2))
 
         ## Draw the odor source
         pygame.draw.circle(screen, blue, self.intPair(self.source), 5)
